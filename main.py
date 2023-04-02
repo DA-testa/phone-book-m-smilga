@@ -29,9 +29,18 @@ def process_queries(queries):
                 del contacts[cur_query.number]
         elif (cur_query.type == 'find'):
             if (cur_query.number in contacts):
-                result.append(contacts[cur_query.number])
+                text = str(contacts[cur_query.number])
+                #result.append(contacts[cur_query.number])
+                #result.append(text)
             else:
-                result.append(str(cur_query.number) + ' not found')
+                text += ' not found'
+                #result.append(str(contacts.get(cur_query.number)) + ' not found')
+            
+            result.append(text)
+    for i in range(len(result)):
+        if(i < len(result) - 1 and result[i] + ' not found' == result[i+1]):
+            result.pop(i)
+            
     #print(contacts)
     return result
 
