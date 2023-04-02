@@ -1,5 +1,8 @@
 # python3
 
+import string
+
+
 class Query:
     def __init__(self, query):
         self.type = query[0]
@@ -16,30 +19,32 @@ def write_responses(result):
 
 def process_queries(queries):
     result = []
-    # Keep list of all existing (i.e. not deleted yet) contacts.
-    contacts = []
+    contacts = {}
+
     for cur_query in queries:
-        if cur_query.type == 'add':
-            # if we already have contact with such number,
-            # we should rewrite contact's name
-            for contact in contacts:
-                if contact.number == cur_query.number:
-                    contact.name = cur_query.name
-                    break
-            else: # otherwise, just add it
-                contacts.append(cur_query)
-        elif cur_query.type == 'del':
-            for j in range(len(contacts)):
-                if contacts[j].number == cur_query.number:
-                    contacts.pop(j)
-                    break
-        else:
-            response = 'not found'
-            for contact in contacts:
-                if contact.number == cur_query.number:
-                    response = contact.name
-                    break
-            result.append(response)
+        if (cur_query.type == 'add'):
+            contacts[cur_query.number] = cur_query.name
+        elif (cur_query.type == 'del'):
+            if (cur_query.number in contacts):
+                del contacts[cur_query.number]
+        elif (cur_query.type == 'find'):
+            #text = 'not found'
+            if (cur_query.number in contacts):
+                text = str(contacts[cur_query.number])
+                #result.append(contacts[cur_query.number])
+                #result.append(text)
+            else:
+                text = 'not found'
+                #result.append(str(contacts.get(cur_query.number)) + ' not found')
+            
+            result.append(text)
+    """     
+    for i in range(len(result)):
+        if(i < len(result) - 1 and result[i] + ' not found' == result[i+1]):
+            result.pop(i)
+            """   
+            
+    #print(contacts)
     return result
 
 if __name__ == '__main__':
